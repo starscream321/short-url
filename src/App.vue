@@ -5,6 +5,7 @@
       <router-view class="m-5"></router-view>
     </transition>
   </div>
+  <div></div>
 </template>
 
 <script>
