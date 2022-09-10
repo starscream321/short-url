@@ -9,6 +9,17 @@
 </template>
 
 <script>
+import router from "@/router";
+
+export default {
+  setup(){
+    if(localStorage.getItem('token')){
+      router.replace({path: '/home'})
+    }else{
+      router.replace({path: '/register'})
+    }
+  }
+}
 </script>
 <style scoped>
   .fade-enter-active,

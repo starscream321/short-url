@@ -14,12 +14,12 @@ const routes = [
   {
     path: '/register',
     name: 'register',
-    component: registration()
+    component: registration
   },
   {
     path: '/home',
     name: 'home',
-    component: mainPage()
+    component: mainPage
   }
 ]
 

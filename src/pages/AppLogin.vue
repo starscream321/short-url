@@ -1,7 +1,6 @@
 <template>
   <div class="box-border w-1/2">
     <form class="flex flex-col items-center h-52 relative"
-          @keydown.enter="handleClick"
     >
       <label for="uname"><b>Username</b></label>
       <input class="border-4 border-indigo-400 rounded-full w-1/2 mb-4 p-0 pl-4 focus:border-indigo-500/90"
@@ -18,14 +17,14 @@
       >
       <p v-if="v$.password.$error" class="text-xs text-red-500 absolute top-32">Ввелите пароль</p>
       <div class="flex flex-row">
-        <router-link to="/register"
+        <button  @click.prevent="redirectRegister"
             class="bg-indigo-400 w-20 h-10 m-1 text-white rounded-full hover:bg-indigo-500/90 items-center justify-center flex"
         >
           Register
-        </router-link>
+        </button>
         <button
             class="bg-indigo-400 w-20 h-10 m-1 text-white rounded-full hover:bg-indigo-500/90"
-            @click.prevent="handleClick"
+            @click.prevent="handleLogin"
         >
           Log In
         </button>
@@ -41,6 +40,7 @@ import {computed, reactive} from "vue";
 import {login} from "@/api";
 import useVuelidate from '@vuelidate/core';
 import {minLength, required} from '@vuelidate/validators'
+import router from "@/router";
 
 export default {
   name: "AppLogin",
@@ -60,12 +60,18 @@ export default {
       }
     }))
 
+    const redirectRegister = () => {
+      router.replace({path: '/register'})
+    }
 
-    const handleClick = async () => {
+    const handleLogin = async () => {
       const valid = await v$.value.$validate()
 
       if (valid) {
-        await login(loginForm.username, loginForm.password)
+        await login(loginForm.username, loginForm.password).then(res => console.log(res))
+      }
+      if(localStorage.getItem('token')){
+       await router.replace({path: '/home'})
       }
 
     }
@@ -73,8 +79,9 @@ export default {
     const v$ = useVuelidate(rules, loginForm)
     return {
       loginForm,
-      handleClick,
-      v$
+      handleLogin,
+      v$,
+      redirectRegister
     }
   }
 }

@@ -1,18 +1,17 @@
 <template>
   <div class="box-border w-1/2">
     <form class="flex flex-col items-center h-52 relative"
-          @keydown.enter="handleClick"
     >
       <label for="uname"><b>Username</b></label>
       <input class="border-4 border-indigo-400 rounded-full w-1/2 mb-4 p-0 pl-4 focus:border-indigo-500/90"
-             v-model="loginForm.username"
+             v-model="regForm.username"
              type="text"
              id="uname"
       >
       <p v-if="v$.username.$error" class="text-xs text-red-500 absolute top-14">Введите логин</p>
       <label for="psw"><b>Password</b></label>
       <input class="border-4 border-indigo-400 rounded-full w-1/2 mb-3 p-0 pl-4 focus:border-indigo-500/90"
-             v-model="loginForm.password"
+             v-model="regForm.password"
              type='password'
              id="psw"
       >
@@ -25,6 +24,7 @@
         </router-link>
         <button
             class="bg-indigo-400 w-20 h-10 m-1 text-white rounded-full hover:bg-indigo-500/90"
+            @click.prevent="handleReg"
         >
           Register
         </button>
@@ -37,13 +37,14 @@
 <script>
 import {computed, reactive} from "vue";
 import {minLength, required} from "@vuelidate/validators";
-import {login} from "@/api";
+import {registration} from "@/api";
 import useVuelidate from "@vuelidate/core";
+import router from "@/router";
 
 export default {
   name: "AppRegister",
   setup() {
-    const loginForm = reactive({
+    const regForm = reactive({
       username: '',
       password: ''
     })
@@ -59,19 +60,20 @@ export default {
     }))
 
 
-    const handleClick = async () => {
+    const handleReg = async () => {
       const valid = await v$.value.$validate()
-
+      console.log(valid)
       if (valid) {
-        await login(loginForm.username, loginForm.password)
+        await registration(regForm.username, regForm.password)
+        await router.replace({path: '/'})
       }
 
     }
 
-    const v$ = useVuelidate(rules, loginForm)
+    const v$ = useVuelidate(rules, regForm)
     return {
-      loginForm,
-      handleClick,
+      regForm,
+      handleReg,
       v$
     }
   }
