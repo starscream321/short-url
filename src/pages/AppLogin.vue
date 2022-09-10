@@ -1,5 +1,6 @@
 <template>
   <div class="box-border w-1/2">
+    <h2 class="flex justify-center text-2xl font-bold mb-5">Login</h2>
     <form class="flex flex-col items-center h-52 relative"
     >
       <label for="uname"><b>Username</b></label>
